@@ -104,6 +104,8 @@ public class Settings : MonoBehaviour
      * and enable joining of second player using the alternative input scheme.
      */
 
+    void Update() { }
+
     /// <summary>
     /// Called when the script instance is first loaded.
     /// </summary>
