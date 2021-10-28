@@ -68,6 +68,19 @@ public class Enemy : MonoBehaviour
          *  - Physical body of the enemy: mRigidBody
          * Implement a simple AI, which will head towards the closest player and follow them.
          */
+
+        var nearestP = GameManager.Instance.NearestPlayer(transform.position);
+        if(nearestP != null) {
+            var nearestPPos = nearestP.GetComponent<Transform>().position;
+            var direction = nearestPPos - transform.position;
+            direction = direction.normalized;
+
+            if(direction != Vector3.zero) {
+                //transform.Translate(direction*0.01f*speed);
+                transform.LookAt(nearestPPos, Vector3.up);
+                transform.Translate(transform.forward*0.01f*speed, Space.World);
+            }
+        }
     }
 
     /// <summary>
