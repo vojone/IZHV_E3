@@ -196,11 +196,34 @@ public class Gun : MonoBehaviour
          *  - Number / spread of shotgun bullets : shotgunBullets, shotgunSpread
          * Implement both single shot and shotgun (swap by pressing <SPACE> by default)
          */
-        
-        SpawnBullet(
-            new Vector3{ x = 0.0f, y = 0.0f, z = 0.0f }, 
-            Quaternion.Euler(0.0f, 0.0f, 0.0f)
-        );
+
+        var rot = director.rotation;
+        var pos = director.position;
+        if(shotgun && shotgunBullets > 1) { //Shotgun mode activated
+            //Number of degrees without bullet:
+            var bulletAngleGap = shotgunSpread/(shotgunBullets - 1);
+
+            //Leftmost bullet will fly in following direction: 
+            var startAngles = new Vector3(
+                rot.eulerAngles.x, 
+                rot.eulerAngles.y - shotgunSpread/2.0f,
+                rot.eulerAngles.z
+            );
+
+            for(int i = 0; i < shotgunBullets; i++) {
+                //Starting angle for bullet with index i
+                var currentAngles =  new Vector3(
+                    startAngles.x,
+                    startAngles.y + bulletAngleGap*i,
+                    startAngles.z
+                );
+
+                SpawnBullet(pos, Quaternion.Euler(currentAngles));
+            }
+        }
+        else { //Normal mode
+            SpawnBullet(pos, rot);
+        }
     }
 
     /// <summary>
