@@ -31,6 +31,8 @@ public class GameManager : MonoBehaviour
     /// Singleton instance of the GameManager.
     /// </summary>
     private static GameManager sInstance;
+
+    public Camera mainCamera;
     
     /// <summary>
     /// Getter for the singleton GameManager object.
@@ -38,11 +40,14 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance
     { get { return sInstance; } }
 
+    public Text gameOver;
+
     /// <summary>
     /// Called when the script instance is first loaded.
     /// </summary>
     private void Awake()
     {
+        gameOver.gameObject.SetActive(false);
         // Initialize the singleton instance, if no other exists.
         if (sInstance != null && sInstance != this)
         { Destroy(gameObject); }
@@ -70,20 +75,37 @@ public class GameManager : MonoBehaviour
             var playerGO = mLivingPlayers[iii];
             var player = playerGO.GetComponent<Player>();
             
+            if(mGameLost) {
+                player.KillPlayer();
+            }
+
             if (!player.IsAlive())
             {
                 mLivingPlayers.RemoveAt(iii);
-                if (!player.primaryPlayer)
+                if (mLivingPlayers.Count > 0)
                 { // Only kill non-primary players.
                     // Update the UI.
                     var playerUI = Settings.Instance.PlayerUI(player.playerIndex);
                     playerUI?.GetComponent<HealthUI>()?.SetVisible(false);
+                    if(player.primaryPlayer) {
+                        mLivingPlayers[0].GetComponent<Player>().primaryPlayer = true;
+                        mainCamera.GetComponent<CameraHelper>().followTarget = mLivingPlayers[0];
+                    }
                     
                     // Update the state.
                     Settings.Instance.RemovePlayer(playerGO);
                     Destroy(player.gameObject);
                 }
             }
+        }
+
+        if(mLivingPlayers.Count == 0) {
+            LooseGame();
+        }
+
+        var keyPressed = Keyboard.current.spaceKey.wasPressedThisFrame;
+        if(mGameLost && keyPressed) {
+            ResetGame();
         }
         
         // Update the current list of players.
@@ -135,6 +157,7 @@ public class GameManager : MonoBehaviour
     {
         // Loose the game.
         mGameLost = true;
+        gameOver.gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -156,6 +179,21 @@ public class GameManager : MonoBehaviour
         var healthUI = playerUI.GetComponent<HealthUI>();
         healthUI.SetVisible(true);
         healthUI.DisplayHealth(current, min, max);
+    }
+
+
+    public void DisplayStamina(int playerIdx, float current, float min, float max)
+    {
+        // Get UI for the specified player.
+        var playerUI = Settings.Instance.PlayerUI(playerIdx);
+        // Check if given player has a UI.
+        if (playerUI == null)
+        { return; }
+        
+        // Retrieve the Health UI and display the health.
+        var healthUI = playerUI.GetComponent<HealthUI>();
+        healthUI.SetVisible(true);
+        healthUI.DisplayStamina(current, min, max);
     }
 
     /// <summary>

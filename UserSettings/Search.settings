@@ -10,7 +10,7 @@ scopes = {
 	"last_search.929B5199" = ""
 	"OpenInspectorPreview.929B5199" = "0"
 	"currentGroup.929B5199" = "all"
-	"last_search.969B5199" = "player input man"
+	"last_search.969B5199" = "MaterialProper"
 	"OpenInspectorPreview.969B5199" = "0"
 	"currentGroup.969B5199" = "all"
 }
@@ -67,6 +67,7 @@ providers = {
 	}
 }
 recentSearches = [
+	"create Sprit"
 	"player input man"
 	"refre"
 	"prefere"

@@ -41,12 +41,23 @@ public class Gun : MonoBehaviour
     /// Shotgun spread angle in degrees.
     /// </summary>
     public float shotgunSpread = 30.0f;
+
+
+    /// <summary>
+    /// Mupliplies cooldown when shotgun is used.
+    /// </summary>
+    public float shotgunDisadv = 6.0f;
     
     /// <summary>
     /// Offset at which the bullet should be spawned.
     /// </summary>
     public float spawnOffset = 0.3f;
-    
+
+    public float inacc = 1.0f;
+
+    public float moveDisadvantage = 40.0f;
+
+    public bool isInaccurate = false;
     /// <summary>
     /// Transform used to direct the bullets.
     /// </summary>
@@ -139,6 +150,9 @@ public class Gun : MonoBehaviour
                 
                 // "Heat up" the gun.
                 mCoolDown += secondsPerBullet;
+                if(shotgun) {
+                    mCoolDown *= shotgunDisadv;
+                }
             }
         }
     }
@@ -161,6 +175,10 @@ public class Gun : MonoBehaviour
     {
         // Stop firing.
         mFiring = false;
+    }
+
+    public void toggleInaccuracy(bool nextstate) {
+        isInaccurate = nextstate;
     }
 
     /// <summary>
@@ -197,14 +215,19 @@ public class Gun : MonoBehaviour
          * Implement both single shot and shotgun (swap by pressing <SPACE> by default)
          */
 
+        var curInacc = inacc;
+        if(isInaccurate) {
+            curInacc += moveDisadvantage;
+        }
+
         var rot = director.rotation;
         var pos = director.position;
         if(shotgun && shotgunBullets > 1) { //Shotgun mode activated
             //Number of degrees without bullet:
-            var bulletAngleGap = shotgunSpread/(shotgunBullets - 1);
+            var bulletGap = shotgunSpread/(shotgunBullets - 1);
 
             //Leftmost bullet will fly in following direction: 
-            var startAngles = new Vector3(
+            var startAng = new Vector3(
                 rot.eulerAngles.x, 
                 rot.eulerAngles.y - shotgunSpread/2.0f,
                 rot.eulerAngles.z
@@ -213,16 +236,22 @@ public class Gun : MonoBehaviour
             for(int i = 0; i < shotgunBullets; i++) {
                 //Starting angle for bullet with index i
                 var currentAngles =  new Vector3(
-                    startAngles.x,
-                    startAngles.y + bulletAngleGap*i,
-                    startAngles.z
+                    startAng.x,
+                    startAng.y + bulletGap*i + UnityEngine.Random.Range(-curInacc, curInacc),
+                    startAng.z
                 );
 
                 SpawnBullet(pos, Quaternion.Euler(currentAngles));
             }
         }
         else { //Normal mode
-            SpawnBullet(pos, rot);
+            var angles = new Vector3(
+                rot.eulerAngles.x, 
+                rot.eulerAngles.y + UnityEngine.Random.Range(-curInacc, curInacc),
+                rot.eulerAngles.z
+            );
+
+            SpawnBullet(pos, Quaternion.Euler(angles));
         }
     }
 
@@ -259,6 +288,10 @@ public class Gun : MonoBehaviour
             var bullet = Instantiate(bulletPrefab);
             bullet.transform.position = position;
             bullet.transform.rotation = rotation;
+
+            if(shotgunDisadv != 0.0f && shotgun) {
+                bullet.GetComponent<Bullet>().maxLifeTime /= (shotgunDisadv/1.5f);
+            }
         }
     }
     

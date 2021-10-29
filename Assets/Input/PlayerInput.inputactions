@@ -85,6 +85,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ResetGame",
+                    "type": "Button",
+                    "id": "6e6d4f4a-1027-4de4-bb40-40feaac6554f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -349,6 +358,28 @@
                     "processors": "",
                     "groups": "M&K1",
                     "action": "ToggleInvincible",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7a8c3e14-9b64-4f84-a5dc-54b0eaa18f5a",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "M&K1",
+                    "action": "ResetGame",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cbe060e0-3b19-4219-95ab-3dbc4b4a2502",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "ResetGame",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -21,7 +21,7 @@ public class EnemySpawner : MonoBehaviour
     /// Delay between spawning enemies.
     /// </summary>
     [ Header("Gameplay") ]
-    public float spawnDelay = 1.0f;
+    public float spawnDelay = 1.7f;
     
     /// <summary>
     /// Is the spawner operating?
@@ -53,6 +53,12 @@ public class EnemySpawner : MonoBehaviour
     /// </summary>
     private Entity mEnemyEntityPrefab;
 
+    private Transform defaultPos;
+
+    public float min = -7.0f;
+    
+    public float max = 7.0f;
+
     /// <summary>
     /// Called when the script instance is first loaded.
     /// </summary>
@@ -83,6 +89,8 @@ public class EnemySpawner : MonoBehaviour
             { mEntityManager.SetName(mEnemyEntityPrefab, "Enemy"); }
 #endif // UNITY_EDITOR
         }
+
+        defaultPos = transform;
     }
     
     /// <summary>
@@ -96,6 +104,21 @@ public class EnemySpawner : MonoBehaviour
     /// </summary>
     void FixedUpdate()
     {
+        if(RandomBool()) {
+            transform.position = new Vector3(
+                RandomBool() ? min : max, 
+                defaultPos.position.y, 
+                UnityEngine.Random.Range(min, max)
+            );
+        }
+        else {
+            transform.position = new Vector3(
+                UnityEngine.Random.Range(min, max), 
+                defaultPos.position.y, 
+                RandomBool() ? min : max
+            );
+        }
+
         if (spawnEnabled)
         {
             // Cool down the spawner by the elapsed time.
@@ -109,6 +132,10 @@ public class EnemySpawner : MonoBehaviour
                 mCoolDown += spawnDelay;
             }
         }
+    }
+
+    bool RandomBool() {
+        return UnityEngine.Random.Range(0.0f, 1.0f) >= 0.5;
     }
     
     /// <summary>

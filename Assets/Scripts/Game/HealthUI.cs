@@ -54,6 +54,8 @@ public class HealthUI : MonoBehaviour
     /// </summary>
     public Text mHealthText;
 
+    public Image mStaminaBar;
+
     /// <summary>
     /// Called when the script instance is first loaded.
     /// </summary>
@@ -111,6 +113,21 @@ public class HealthUI : MonoBehaviour
         { mHealthBar.color = healthMedium; }
         else
         { mHealthBar.color = healthLow; }
+    }
+
+    public void DisplayStamina(float current, float min, float max) {
+        var total = max - min;
+
+        if(current <= min) {
+            mStaminaBar.color = healthLow;
+        }
+        else if(current >= max) {
+            mStaminaBar.color = healthHigh;
+        }
+
+        var currentPtg = Math.Clamp(current / total, 0.0f, 1.0f);
+
+        mStaminaBar.fillAmount = currentPtg;
     }
 
     /// <summary>

@@ -62,6 +62,13 @@ public class Player : MonoBehaviour
     /// </summary>
     private GameObject mGun;
 
+
+    public float stamina = 1.0f;
+
+    public float staminaRegenSpeed = 0.01f;
+
+    public float staminaWane = 0.06f;
+
     /// <summary>
     /// Is the Player currently dead?
     /// </summary>
@@ -236,9 +243,29 @@ public class Player : MonoBehaviour
         // Keyboard.current.aKey.isPressed
         
         // Move the Player in the requested direction.
-        MovePlayer(new Vector3{ 
-            x = mMoveInput.x, y = 0.0f, z = mMoveInput.y
-        });
+        var moved = MovePlayer(
+            new Vector3{x = mMoveInput.x, y = 0.0f, z = mMoveInput.y}
+        );
+        
+        if(moved) {
+            if(stamina >= 0) {
+                stamina -= staminaWane*0.3f;
+            }
+        }
+        else {
+            if(stamina < 1.0f) {
+                stamina += staminaRegenSpeed*0.3f;
+            }
+        }
+
+        if(stamina <= 0.0f) {
+            mGun.GetComponent<Gun>().toggleInaccuracy(true);
+        }
+        else if(stamina >= 1.0f) {
+            mGun.GetComponent<Gun>().toggleInaccuracy(false);
+        }
+
+        GameManager.Instance.DisplayStamina(mPlayerIndex, stamina, 0.0f, 1.0f);
         
         // Make the Player look in the target direction.
         var lookTarget = CalculateLookTarget();
@@ -322,7 +349,7 @@ public class Player : MonoBehaviour
     /// Move the player in given direction, using the curent speed.
     /// </summary>
     /// <param name="direction">Movement direction.</param>
-    public void MovePlayer(Vector3 direction)
+    public bool MovePlayer(Vector3 direction)
     {
         var moveDelta = direction.normalized * speed * Time.deltaTime;
         
@@ -340,6 +367,13 @@ public class Player : MonoBehaviour
         { mRigidBody.MovePosition(hit.point); }
         else
         { mRigidBody.MovePosition(transform.position + moveDelta); }
+
+        if(direction.magnitude > 0.5f) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
     
     /// <summary>

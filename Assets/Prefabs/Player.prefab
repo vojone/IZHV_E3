@@ -707,6 +707,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: a464e659-f1c1-4584-a512-ba25f1f7bdb9
     m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 6e6d4f4a-1027-4de4-bb40-40feaac6554f
+    m_ActionName: PlayerControl/ResetGame[/Keyboard/space]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: PlayerControl
@@ -731,6 +735,9 @@ MonoBehaviour:
   invincible: 0
   damageDelay: 0.5
   speed: 10
+  stamina: 1
+  staminaRegenSpeed: 0.0025
+  staminaWane: 0.02
 --- !u!114 &1204133201242880331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -885,4 +892,8 @@ MonoBehaviour:
   shotgun: 0
   shotgunBullets: 6
   shotgunSpread: 30
+  shotgunDisadv: 4
   spawnOffset: 0.3
+  inacc: 0.5
+  moveDisadvantage: 180
+  isInaccurate: 0
