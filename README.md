@@ -12,7 +12,10 @@ Good luck!
 Press button on gamepad to add secondary character.
 
 # Control
-`W``A``S``D`/`Left stick` Movement 
+`W` `A` `S` `D`/ `Left stick` Movement 
+
 `Mouse`/`Right stick` Aiming
+
 `Left click`/`South button` Fire
+
 `Right click`/`North button` Toggle gun mode
