@@ -23,3 +23,7 @@ Press button on gamepad to add secondary character.
 `Left click`/`South button` Fire
 
 `Right click`/`North button` Toggle gun mode
+
+
+## Author
+Author of exercise template is Tomas Polasek.
